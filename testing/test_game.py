@@ -5,11 +5,13 @@ from player import Player
 
 
 pygame.init()
-DISPLAY_W, DISPLAY_H = 480, 300
+DISPLAY_W, DISPLAY_H = 500, 400
 canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
 screen = pygame.display.set_mode((DISPLAY_W, DISPLAY_H))
 running = True
 clock = pygame.time.Clock()
+menu = pygame.image.load('start_screen.png').convert()
+scaled_menu = pygame.transform.scale(menu, (DISPLAY_W, DISPLAY_H))
 
 fox = Player()
 
@@ -36,11 +38,13 @@ while running:
                 fox.KEY_w = False
             elif event.key == pygame.K_s:
                 fox.KEY_s = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            fox.attack()
 
 
     fox.update()
 
-    canvas.fill((155,255,255))
+    canvas.blit(scaled_menu, (0,0))
     fox.draw(canvas)
     screen.blit(canvas, (0,0))
     pygame.display.update()

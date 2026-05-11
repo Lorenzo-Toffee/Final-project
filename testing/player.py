@@ -4,7 +4,7 @@ from spritesheet import Spritesheet
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.KEY_a ,self.KEY_w, self.KEY_s, self.KEY_d, self.FACING_LEFT =False, False, False, False, False
+        self.KEY_a ,self.KEY_w, self.KEY_s, self.KEY_d, self.FACING_LEFT ,self.click =False, False, False, False, False, False
         self.load_frames()
         self.rect = self.idle_frames_left[0].get_rect()
         self.rect.midbottom = (240, 300)
@@ -13,6 +13,25 @@ class Player(pygame.sprite.Sprite):
         self.velocity = 0
         self.state = 'idle'
         self.current_image = self.idle_frames_left[0]
+
+    def attack(self):
+        self.click = True
+        if self.click:
+            self.state = 'attacking'
+        if self.state == 'attacking':
+            now = pygame.time.get_ticks()
+            if now - self.last_updated > 10:
+                self.last_updated = now
+                self.current_frame = (self.current_frame + 1) % len(self.attack_frames_left)
+                if self.FACING_LEFT:
+                    self.current_image = self.attack_frames_left[self.current_frame]
+                elif not self.FACING_LEFT:
+                    self.current_image = self.attack_frames_right[self.current_frame]
+            if self.current_frame == len(self.attack_frames_left) - 1:
+                self.click = False
+                self.state = 'idle'
+                self.current_frame = 0
+
 
     def update(self):
         self.velocity = 0
@@ -83,9 +102,7 @@ class Player(pygame.sprite.Sprite):
                                  my_spritesheet.parse_sprite('02.png')]
         self.walking_frames_left = [my_spritesheet.parse_sprite('03.png'), 
                                  my_spritesheet.parse_sprite('04.png')]
-        self.attack_frames_left = [my_spritesheet.parse_sprite('05.png'), 
-                                 my_spritesheet.parse_sprite('06.png'),
-                                 my_spritesheet.parse_sprite('07.png')]
+        self.attack_frames_left = [my_spritesheet.parse_sprite('06.png')]
         self.death_frames_left = [my_spritesheet.parse_sprite('08.png')]
         self.idle_frames_right = []
         self.walking_frames_right = []
