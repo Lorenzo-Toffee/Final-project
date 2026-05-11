@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.velocity = 0
         self.state = 'idle'
         self.current_image = self.idle_frames_left[0]
+        self.speed = 10
 
     def attack(self):
         self.click = True
@@ -20,7 +21,7 @@ class Player(pygame.sprite.Sprite):
             self.state = 'attacking'
         if self.state == 'attacking':
             now = pygame.time.get_ticks()
-            if now - self.last_updated > 10:
+            if now - self.last_updated > 2:
                 self.last_updated = now
                 self.current_frame = (self.current_frame + 1) % len(self.attack_frames_left)
                 if self.FACING_LEFT:
@@ -45,9 +46,10 @@ class Player(pygame.sprite.Sprite):
         elif self.KEY_s:
             self.height = 2
         self.rect.x += self.velocity
-        self.rect.y += self.height
+        self.rect.y += self.height 
         self.set_state()
         self.animate()
+
 
 
     def set_state(self):

@@ -1,9 +1,9 @@
 import os
 from PIL import Image
 
-folder = "Funtimefoxy"
-output_folder = "Funtimefoxy_resized/"
-target_size = (200, 200)
+folder = "Enemies"
+output_folder = "Enemies_resized"
+target_size = (500, 500)
 
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)

@@ -18,7 +18,7 @@
 },
 "03.png":
 {
-	"frame": {"x":1000,"y":0,"w":500,"h":500},
+	"frame": {"x":0,"y":500,"w":500,"h":500},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":500},
@@ -26,7 +26,7 @@
 },
 "04.png":
 {
-	"frame": {"x":1500,"y":0,"w":500,"h":500},
+	"frame": {"x":500,"y":500,"w":500,"h":500},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":500},
@@ -34,7 +34,7 @@
 },
 "05.png":
 {
-	"frame": {"x":0,"y":500,"w":500,"h":500},
+	"frame": {"x":0,"y":1000,"w":500,"h":500},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":500},
@@ -42,23 +42,7 @@
 },
 "06.png":
 {
-	"frame": {"x":500,"y":500,"w":500,"h":500},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":500},
-	"sourceSize": {"w":500,"h":500}
-},
-"07.png":
-{
-	"frame": {"x":1000,"y":500,"w":500,"h":500},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":500},
-	"sourceSize": {"w":500,"h":500}
-},
-"08.png":
-{
-	"frame": {"x":1500,"y":500,"w":500,"h":500},
+	"frame": {"x":500,"y":1000,"w":500,"h":500},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":500},
@@ -67,10 +51,10 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "Funtimefoxy_sheet.png",
+	"image": "Enemies_sheet.png",
 	"format": "RGBA8888",
-	"size": {"w":2000,"h":1000},
+	"size": {"w":1000,"h":1500},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:f1b60c9d6145922e0bf6a840fc2f9cdf:8834e6f8885f7aef101f5f76c91d6b43:ed2e96d8bec2168a64037f81e42e54a9$"
+	"smartupdate": "$TexturePacker:SmartUpdate:337217066808efd8634dcb19c2c5fae2:f84c1e5d5ed07e3736dc491e24ae00a3:155abb587fcef055a68f62a1cbbd8605$"
 }
 }
