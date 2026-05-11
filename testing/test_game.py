@@ -1,5 +1,5 @@
 import pygame
-from spritesheet import Spritesheet
+from player import Player
 
 
 
@@ -9,22 +9,38 @@ DISPLAY_W, DISPLAY_H = 480, 300
 canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
 screen = pygame.display.set_mode((DISPLAY_W, DISPLAY_H))
 running = True
+clock = pygame.time.Clock()
 
-my_spritesheet = Spritesheet('Funtimefoxy_sheet.png')
-idle = [my_spritesheet.parse_sprite('01.png'),my_spritesheet.parse_sprite('02.png'),my_spritesheet.parse_sprite('03.png'),my_spritesheet.parse_sprite('04.png'),
-        my_spritesheet.parse_sprite('05.png'),my_spritesheet.parse_sprite('06.png'),my_spritesheet.parse_sprite('07.png'),my_spritesheet.parse_sprite('08.png')]
-
-index = 0
+fox = Player()
 
 while running:
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                index = (index + 1) % len(idle)
+            if event.key == pygame.K_a:
+                fox.KEY_a, fox.FACING_LEFT = True, True
+            elif event.key == pygame.K_d:
+                fox.KEY_d, fox.FACING_LEFT = True, False
+            elif event.key == pygame.K_w:
+                fox.KEY_w = True
+            elif event.key == pygame.K_s:
+                fox.KEY_s = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_a:
+                fox.KEY_a = False
+            elif event.key == pygame.K_d:
+                fox.KEY_d = False
+            elif event.key == pygame.K_w:
+                fox.KEY_w = False
+            elif event.key == pygame.K_s:
+                fox.KEY_s = False
+
+
+    fox.update()
 
     canvas.fill((155,255,255))
-    canvas.blit(idle[index], (0, DISPLAY_H - 200))
+    fox.draw(canvas)
     screen.blit(canvas, (0,0))
     pygame.display.update()
