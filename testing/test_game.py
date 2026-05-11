@@ -1,17 +1,20 @@
 import pygame
 from player import Player
 from spritesheet import Spritesheet
-
+import random
 
 
 
 pygame.init()
+
 DISPLAY_W, DISPLAY_H = pygame.display.Info().current_w, pygame.display.Info().current_h
 canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
 screen = pygame.display.set_mode((DISPLAY_W, DISPLAY_H))
+
 running = True
 clock = pygame.time.Clock()
-enemies = []
+
+
 backgrounds = [
     pygame.image.load('start_screen.png').convert(),
     pygame.image.load('start_level.png').convert()
@@ -23,6 +26,16 @@ new_backgrounds = [
 current_background = 0
 check_edge = False
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__ (self, player):
+        super().__init__()
+        my_spritesheet = Spritesheet('Enemies_sheet.png')
+        self.image = [my_spritesheet.parse_sprite('01.png')]
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, DISPLAY_W - self.rect.width)
+        
+     
+
 fox = Player()
 
 while running:
@@ -33,6 +46,7 @@ while running:
         current_background = (current_background + 1) % len(new_backgrounds)
         fox.rect.left = 0
         check_edge = True
+        start = Enemy()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

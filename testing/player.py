@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.state = 'idle'
         self.current_image = self.idle_frames_left[0]
         self.speed = 10
+        self.health = 3
 
     def attack(self):
         self.click = True
