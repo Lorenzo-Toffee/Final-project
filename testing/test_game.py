@@ -1,5 +1,6 @@
 import pygame
 from player import Player
+from spritesheet import Spritesheet
 
 
 
@@ -10,6 +11,7 @@ canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
 screen = pygame.display.set_mode((DISPLAY_W, DISPLAY_H))
 running = True
 clock = pygame.time.Clock()
+enemies = []
 backgrounds = [
     pygame.image.load('start_screen.png').convert(),
     pygame.image.load('start_level.png').convert()
@@ -24,7 +26,7 @@ check_edge = False
 fox = Player()
 
 while running:
-    clock.tick(60)
+    clock.tick(140)
     if check_edge == True:
          pass
     elif fox.rect.right > DISPLAY_W and check_edge == False:

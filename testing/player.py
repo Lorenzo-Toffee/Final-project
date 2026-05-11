@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         self.KEY_a ,self.KEY_w, self.KEY_s, self.KEY_d, self.FACING_LEFT ,self.click =False, False, False, False, False, False
         self.load_frames()
         self.rect = self.idle_frames_left[0].get_rect()
-        self.rect.midbottom = (240, 300)
+        self.rect.midbottom = (500, 600)
         self.current_frame = 0
         self.last_updated = 0
         self.velocity = 0
