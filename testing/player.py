@@ -117,3 +117,4 @@ class Player(pygame.sprite.Sprite):
             self.attack_frames_right.append(pygame.transform.flip(frame, True, False))
         for frame in self.death_frames_left:
             self.death_frames_right.append(pygame.transform.flip(frame, True, False))
+

@@ -10,24 +10,37 @@ canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
 screen = pygame.display.set_mode((DISPLAY_W, DISPLAY_H))
 running = True
 clock = pygame.time.Clock()
-menu = pygame.image.load('start_screen.png').convert()
-scaled_menu = pygame.transform.scale(menu, (DISPLAY_W, DISPLAY_H))
+backgrounds = [
+    pygame.image.load('start_screen.png').convert(),
+    pygame.image.load('start_level.png').convert()
+]
+scaled_menu = pygame.transform.scale(backgrounds[0], (DISPLAY_W, DISPLAY_H))
+scaled_start_level = pygame.transform.scale(backgrounds[1], (DISPLAY_W, DISPLAY_H))
+current_background = 0
+check_edge = False
 
 fox = Player()
 
 while running:
     clock.tick(60)
+    if check_edge == True:
+         pass
+    elif fox.rect.right > DISPLAY_W and check_edge == False:
+        current_background = (current_background + 1) % len(backgrounds)
+        fox.rect.left = 0
+        check_edge = True
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
                 fox.KEY_a, fox.FACING_LEFT = True, True
-            elif event.key == pygame.K_d:
+        elif keys[pygame.K_d]:
                 fox.KEY_d, fox.FACING_LEFT = True, False
-            elif event.key == pygame.K_w:
+        elif keys[pygame.K_w]:
                 fox.KEY_w = True
-            elif event.key == pygame.K_s:
+        elif keys[pygame.K_s]:
                 fox.KEY_s = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
@@ -40,11 +53,12 @@ while running:
                 fox.KEY_s = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             fox.attack()
+    screen.fill((0,0,0))
 
 
+    canvas.blit(backgrounds[current_background], (0,0))
+    screen.blit(backgrounds[current_background], (0,0))
     fox.update()
+    fox.draw(screen)
+    pygame.display.flip()
 
-    canvas.blit(scaled_menu, (0,0))
-    fox.draw(canvas)
-    screen.blit(canvas, (0,0))
-    pygame.display.update()
