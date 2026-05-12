@@ -37,6 +37,11 @@ class Enemy(pygame.sprite.Sprite):
         self.original_image = self.image
         self.is_alive = True
         
+    def get_collision_rect(self):
+        collision_rect = self.rect.inflate(-int(self.rect.width * 0.5), -int(self.rect.height * 0.5))
+        collision_rect.center = self.rect.center
+        return collision_rect
+
     def update(self):
         """Update enemy movement and collision detection"""
         # Move towards player
@@ -55,16 +60,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y = max(0, min(self.rect.y, self.display_h - self.rect.height))
         self.pos.x = self.rect.x
         self.pos.y = self.rect.y
-        
-        # Check collision with player
-        if self.rect.colliderect(self.player.rect):
-            if self.damage_cooldown <= 0:
-                self.player.take_damage(self.damage)
-                self.damage_cooldown = self.damage_cooldown_max
-        
-        # Update damage cooldown
-        if self.damage_cooldown > 0:
-            self.damage_cooldown -= 1
         
         # Update hit flash
         if self.hit_timer > 0:

@@ -23,6 +23,11 @@ class Player(pygame.sprite.Sprite):
         self.damage_cooldown = 0
         self.damage_cooldown_max = 60  # Frames between damage hits
 
+    def get_collision_rect(self):
+        collision_rect = self.rect.inflate(-int(self.rect.width * 0.7), -int(self.rect.height * 0.75))
+        collision_rect.center = self.rect.center
+        return collision_rect
+
     def take_damage(self, damage):
         if self.damage_cooldown <= 0:
             self.health -= damage
@@ -146,11 +151,9 @@ class Player(pygame.sprite.Sprite):
     def update_attack_rect(self):
         """Update the attack hitbox based on player position and facing direction"""
         if self.is_attacking:
-            # Create attack box extending from player
-            attack_width = 100
-            attack_height = 60
+            attack_width = 180
+            attack_height = 70
             if self.FACING_LEFT:
-                # Attack to the left
                 self.attack_rect = pygame.Rect(
                     self.rect.left - attack_width,
                     self.rect.centery - attack_height // 2,
@@ -158,7 +161,6 @@ class Player(pygame.sprite.Sprite):
                     attack_height
                 )
             else:
-                # Attack to the right
                 self.attack_rect = pygame.Rect(
                     self.rect.right,
                     self.rect.centery - attack_height // 2,

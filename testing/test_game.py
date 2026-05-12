@@ -14,6 +14,7 @@ canvas = pygame.Surface((DISPLAY_W,DISPLAY_H))
 screen = pygame.display.set_mode((DISPLAY_W, DISPLAY_H))
 
 running = True
+game_started = False
 game_over = False
 clock = pygame.time.Clock()
 
@@ -51,14 +52,55 @@ while running:
         current_background = (current_background + 1) % len(new_backgrounds)
         player.rect.left = 0
         check_edge = True
+        game_started = True
     
-    # Spawn enemies when game has started
-    if check_edge == True and not game_over:
+    # Spawn enemies when the level is active
+    if game_started and not game_over:
         enemy_spawn_timer += 1
         if enemy_spawn_timer >= enemy_spawn_interval and len(enemies) < max_enemies:
-            # Spawn enemy at random position on screen
-            spawn_x = random.randint(0, DISPLAY_W - 50)
-            spawn_y = random.randint(0, DISPLAY_H - 50)
+            temp_enemy = Enemy(player, 0, 0, DISPLAY_W, DISPLAY_H)
+            enemy_full_w, enemy_full_h = temp_enemy.rect.size
+            enemy_collision = temp_enemy.get_collision_rect()
+            enemy_collision_w, enemy_collision_h = enemy_collision.size
+            enemy_collision_offset_x = (enemy_full_w - enemy_collision_w) // 2
+            enemy_collision_offset_y = (enemy_full_h - enemy_collision_h) // 2
+            del temp_enemy
+            player_collision = player.get_collision_rect()
+            min_distance = 300
+            spawn_x = None
+            spawn_y = None
+            for _ in range(100):
+                candidate_x = random.randint(0, DISPLAY_W - enemy_full_w)
+                candidate_y = random.randint(0, DISPLAY_H - enemy_full_h)
+                candidate_collision = pygame.Rect(
+                    candidate_x + enemy_collision_offset_x,
+                    candidate_y + enemy_collision_offset_y,
+                    enemy_collision_w,
+                    enemy_collision_h
+                )
+                dist = ((candidate_collision.centerx - player_collision.centerx) ** 2 + (candidate_collision.centery - player_collision.centery) ** 2) ** 0.5
+                if dist >= min_distance and not candidate_collision.colliderect(player_collision):
+                    spawn_x = candidate_x
+                    spawn_y = candidate_y
+                    break
+            if spawn_x is None:
+                # fallback to any position that doesn't overlap the player's collision box
+                for _ in range(50):
+                    candidate_x = random.randint(0, DISPLAY_W - enemy_full_w)
+                    candidate_y = random.randint(0, DISPLAY_H - enemy_full_h)
+                    candidate_collision = pygame.Rect(
+                        candidate_x + enemy_collision_offset_x,
+                        candidate_y + enemy_collision_offset_y,
+                        enemy_collision_w,
+                        enemy_collision_h
+                    )
+                    if not candidate_collision.colliderect(player_collision):
+                        spawn_x = candidate_x
+                        spawn_y = candidate_y
+                        break
+            if spawn_x is None:
+                spawn_x = random.randint(0, DISPLAY_W - enemy_full_w)
+                spawn_y = random.randint(0, DISPLAY_H - enemy_full_h)
             new_enemy = Enemy(player, spawn_x, spawn_y, DISPLAY_W, DISPLAY_H)
             enemies.add(new_enemy)
             enemy_spawn_timer = 0
@@ -67,6 +109,28 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+            elif event.key == pygame.K_r:
+                game_over = False
+                game_started = True
+                current_background = 1
+                check_edge = True
+                enemy_spawn_timer = 0
+                enemies.empty()
+                player.health = 3
+                player.state = 'idle'
+                player.current_frame = 0
+                player.last_updated = pygame.time.get_ticks()
+                player.is_attacking = False
+                player.click = False
+                player.attack_rect = pygame.Rect(0, 0, 0, 0)
+                player.KEY_a = player.KEY_w = player.KEY_s = player.KEY_d = False
+                player.FACING_LEFT = False
+                player.current_image = player.idle_frames_right[0]
+                player.rect.left = 0
 
         if not game_over:
             keys = pygame.key.get_pressed()
@@ -99,13 +163,17 @@ while running:
     # Check if player attack hits enemies
     if player.is_attacking:
         for enemy in list(enemies):
-            if player.attack_rect.colliderect(enemy.rect):
-                enemy.take_damage(player.attack_damage)
+            if player.attack_rect.colliderect(enemy.get_collision_rect()):
+                enemy_offset = enemy.rect.centerx - player.rect.centerx
+                enemy_same_side = (enemy_offset > 0 and not player.FACING_LEFT) or (enemy_offset < 0 and player.FACING_LEFT)
+                vertical_overlap = abs(enemy.rect.centery - player.rect.centery) < 30
+                if enemy_same_side and vertical_overlap:
+                    enemy.take_damage(player.attack_damage)
     
     # Check collision between enemies and player (enemy damages player)
-    if check_edge == True:
+    if game_started:
         for enemy in list(enemies):
-            if enemy.rect.colliderect(player.rect):
+            if enemy.get_collision_rect().colliderect(player.get_collision_rect()):
                 player.take_damage(enemy.damage)
                 enemy.take_damage(2)  # Kill the enemy on collision
     
@@ -119,7 +187,7 @@ while running:
     screen.blit(new_backgrounds[current_background], (0,0))
     
     # Draw health bar at top (only after entering the game level)
-    if check_edge == True:
+    if game_started:
         health_bar_num = max(1, 4 - player.health)
         if health_bar_num in health_bars:
             screen.blit(health_bars[health_bar_num], (10, 10))
