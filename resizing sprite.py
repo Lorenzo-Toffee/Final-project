@@ -1,8 +1,8 @@
 import os
 from PIL import Image
 
-folder = "Enemies"
-output_folder = "Enemies_resized"
+folder = "Healthbar"
+output_folder = "Healthbar_resized"
 target_size = (500, 500)
 
 if not os.path.exists(output_folder):
